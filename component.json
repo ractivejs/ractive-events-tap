@@ -1,0 +1,17 @@
+{
+  "name": "ractive-events-tap",
+  "repo": "RactiveJS/Ractive-events-tap",
+  "description": "ractive-events-tap",
+  "version": "0.1.0",
+  "keywords": [],
+  "dependencies": {
+    "brett-shwom/Ractive": "0.3.8pre-legacy"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "Ractive-events-tap.js",
+  "scripts": [
+    "Ractive-events-tap.js"
+  ]
+}
+
