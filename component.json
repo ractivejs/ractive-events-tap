@@ -4,7 +4,9 @@
   "description": "ractive-events-tap",
   "version": "0.1.0",
   "keywords": [],
-  "dependencies": {},
+  "dependencies": {
+    "brett-shwom/Ractive": "0.3.8pre"
+  },
   "development": {},
   "license": "MIT",
   "main": "Ractive-events-tap.js",
