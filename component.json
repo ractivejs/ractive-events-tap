@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "keywords": [],
   "dependencies": {
-    "brett-shwom/Ractive": "0.3.8pre"
+    "brett-shwom/Ractive": "0.3.8pre-legacy"
   },
   "development": {},
   "license": "MIT",
