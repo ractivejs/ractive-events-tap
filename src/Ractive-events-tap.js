@@ -1,6 +1,6 @@
 /*
 
-	Ractive-events-tap
+	ractive-events-tap
 	==================
 
 	Version <%= VERSION %>.
@@ -26,20 +26,20 @@
 
 	Troubleshooting: If you're using a module system in your app (AMD or
 	something more nodey) then you may need to change the paths below,
-	where it says `require( 'Ractive' )` or `define([ 'Ractive' ]...)`.
+	where it says `require( 'ractive' )` or `define([ 'ractive' ]...)`.
 
 	==========================
 
 	Usage: Include this file on your page below Ractive, e.g:
 
-	    <script src='lib/Ractive.js'></script>
-	    <script src='lib/Ractive-events-tap.js'></script>
+	    <script src='lib/ractive.js'></script>
+	    <script src='lib/ractive-events-tap.js'></script>
 
 	Or, if you're using a module loader, require this module:
 
 	    // requiring the plugin will 'activate' it - no need to use
 	    // the return value
-	    require( 'Ractive-events-tap' );
+	    require( 'ractive-events-tap' );
 
 	Add a tap event in the normal fashion:
 
@@ -59,12 +59,12 @@
 
 	// Common JS (i.e. browserify) environment
 	if ( typeof module !== 'undefined' && module.exports && typeof require === 'function' ) {
-		factory( require( 'Ractive' ) );
+		factory( require( 'ractive' ) );
 	}
 
 	// AMD?
 	else if ( typeof define === 'function' && define.amd ) {
-		define([ 'Ractive' ], factory );
+		define([ 'ractive' ], factory );
 	}
 
 	// browser global
@@ -73,7 +73,7 @@
 	}
 
 	else {
-		throw new Error( 'Could not find Ractive! It must be loaded before the Ractive-events-tap plugin' );
+		throw new Error( 'Could not find Ractive! It must be loaded before the ractive-events-tap plugin' );
 	}
 
 }( typeof window !== 'undefined' ? window : this, function ( Ractive ) {

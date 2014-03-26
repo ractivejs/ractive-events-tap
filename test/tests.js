@@ -1,5 +1,5 @@
-// Ractive-events-tap tests
-// ==================
+// ractive-events-tap tests
+// ========================
 
 (function () {
 

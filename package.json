@@ -4,13 +4,13 @@
 	"author": {
 		"name": "Rich Harris"
 	},
-	"main": "Ractive-events-tap.js",
+	"main": "ractive-events-tap.js",
 	"description": "Tap/fastclick event plugin for Ractive.js",
 	"jam": {
 		"dependencies": {
-			"Ractive": ">= 0.3.8"
+			"ractive": ">= 0.3.9"
 		}
-	},	
+	},
 	"devDependencies": {
 		"grunt": "~0.4.1",
 		"grunt-contrib-concat": "~0.3.0",
