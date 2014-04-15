@@ -1,12 +1,10 @@
 {
 	"name": "ractive-events-tap",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"author": "Rich Harris",
 	"main": "ractive-events-tap.js",
 	"ignore": [
-		"**/.*",
-		"src",
-		"test",
-		"Gruntfile.js"
+		"**",
+		"!ractive-events-tap.js"
 	]
 }
