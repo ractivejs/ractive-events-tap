@@ -3,7 +3,7 @@
 	ractive-events-tap
 	==================
 
-	Version <%= VERSION %>.
+	Version <%= pkg.version %>.
 
 	On mobile devices, using `on-click` isn't good enough. Tapping the
 	touchscreen will fire a simulated click event, but only after a 300
