@@ -3,6 +3,9 @@
 	"version": "0.1.1",
 	"author": "Rich Harris",
 	"main": "ractive-events-tap.js",
+	"dependencies": {
+		"ractive": "~0.4.0"
+	},
 	"ignore": [
 		"**",
 		"!ractive-events-tap.js"
