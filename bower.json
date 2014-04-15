@@ -7,7 +7,19 @@
 		"ractive": "~0.4.0"
 	},
 	"ignore": [
-		"**",
-		"!ractive-events-tap.js"
+		".git/",
+		"demo/",
+		"grunt/",
+		"lib/",
+		"src/",
+		"test/",
+		".gitignore",
+		"bower.json",
+		"component.json",
+		"Gruntfile.js",
+		"index.html",
+		"package.json",
+		"ractive-events-tap.min.js",
+		"README.md"
 	]
 }
