@@ -6,6 +6,10 @@
 	"dependencies": {
 		"ractive": "~0.4.0"
 	},
+	"devDependencies": {
+		"qunit": "~1.14.0",
+		"simulant": "~0.1.0"
+	},
 	"ignore": [
 		".git/",
 		"demo/",
