@@ -22,6 +22,13 @@ Or, if you're using a module loader, require this module:
 require( 'ractive-events-tap' );
 ```
 
+To get `ractive-events-tap.min.js` you can:
+
+- Use CDN: `//cdn.jsdelivr.net/ractive.events-tap/latest/ractive-events-tap.min.js`.
+- Use bower: `$ bower i ractive-events-tap`.
+- [Download the latest release](https://github.com/ractivejs/ractive-events-tap/releases/).
+- Clone the repo: `$ git clone https://github.com/ractivejs/ractive-events-tap.git`.
+
 **plugin-specific instructions to go here...**
 
 
