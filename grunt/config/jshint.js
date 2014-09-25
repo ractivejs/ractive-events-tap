@@ -11,7 +11,8 @@ module.exports = {
 			require: true,
 			window: true,
 			document: true,
-			setTimeout: true
+			setTimeout: true,
+			clearTimeout: true
 		}
 	}
 };
