@@ -81,13 +81,17 @@
 	'use strict';
 
 	var tap = function ( node, fire ) {
-		var mousedown, touchstart, focusHandler, distanceThreshold, timeThreshold;
+		var mousedown, touchstart, focusHandler, distanceThreshold, timeThreshold, preventMousedownEvents, preventMousedownTimeout;
 
 		distanceThreshold = 5; // maximum pixels pointer can move before cancel
 		timeThreshold = 400;   // maximum milliseconds between down and up before cancel
 
 		mousedown = function ( event ) {
 			var currentTarget, x, y, pointerId, up, move, cancel;
+
+			if ( preventMousedownEvents ) {
+				return;
+			}
 
 			if ( event.which !== undefined && event.which !== 1 ) {
 				return;
@@ -182,6 +186,15 @@
 				}
 
 				event.preventDefault();  // prevent compatibility mouse event
+
+				// for the benefit of mobile Firefox and old Android browsers, we need this absurd hack.
+				preventMousedownEvents = true;
+				clearTimeout( preventMousedownTimeout );
+
+				preventMousedownTimeout = setTimeout( function () {
+					preventMousedownEvents = false;
+				}, 400 );
+
 				fire({
 					node: currentTarget,
 					original: event
