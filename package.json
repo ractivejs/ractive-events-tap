@@ -6,8 +6,8 @@
 	},
 	"main": "ractive-events-tap.js",
 	"description": "Tap/fastclick event plugin for Ractive.js",
-	"dependencies": {
-		"ractive": "^0.5.8"
+	"peerDependencies": {
+		"ractive": "^0.6.0"
 	},
 	"devDependencies": {
 		"grunt": "~0.4.1",
