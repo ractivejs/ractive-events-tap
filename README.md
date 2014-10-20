@@ -28,8 +28,12 @@ To get `ractive-events-tap.min.js` you can:
 - Use bower: `$ bower i ractive-events-tap`.
 - [Download the latest release](https://github.com/ractivejs/ractive-events-tap/releases/).
 - Clone the repo: `$ git clone https://github.com/ractivejs/ractive-events-tap.git`.
+- Use npm: `npm install ractive-events-tap`. 
 
-**plugin-specific instructions to go here...**
+## Notes:
+
+- If you use CommonJS make sure you also have Ractive itself installed.
+
 
 
 
