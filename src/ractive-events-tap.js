@@ -81,7 +81,7 @@
 	'use strict';
 
 	var tap = function ( node, fire ) {
-		var mousedown, touchstart, focusHandler, distanceThreshold, timeThreshold, preventMousedownEvents, preventMousedownTimeout;
+		var mousedown, touchstart, clickHandler, distanceThreshold, timeThreshold, preventMousedownEvents, preventMousedownTimeout;
 
 		distanceThreshold = 5; // maximum pixels pointer can move before cancel
 		timeThreshold = 400;   // maximum milliseconds between down and up before cancel
@@ -233,30 +233,16 @@
 
 
 		// native buttons, and <input type='button'> elements, should fire a tap event
-		// when the space key is pressed
+		// when the space key is pressed, using the native 'click' event
 		if ( node.tagName === 'BUTTON' || node.type === 'button' ) {
-			focusHandler = function () {
-				var blurHandler, keydownHandler;
-
-				keydownHandler = function ( event ) {
-					if ( event.which === 32 || event.keyCode === 32 ) { // space key
-						fire({
-							node: node,
-							original: event
-						});
-					}
-				};
-
-				blurHandler = function () {
-					node.removeEventListener( 'keydown', keydownHandler, false );
-					node.removeEventListener( 'blur', blurHandler, false );
-				};
-
-				node.addEventListener( 'keydown', keydownHandler, false );
-				node.addEventListener( 'blur', blurHandler, false );
+			clickHandler = function ( event ) {
+				fire({
+					node: node,
+					original: event
+				});
 			};
 
-			node.addEventListener( 'focus', focusHandler, false );
+			node.addEventListener( 'click', clickHandler, false );
 		}
 
 
@@ -266,7 +252,7 @@
 				node.removeEventListener( 'MSPointerDown', mousedown, false );
 				node.removeEventListener( 'mousedown', mousedown, false );
 				node.removeEventListener( 'touchstart', touchstart, false );
-				node.removeEventListener( 'focus', focusHandler, false );
+				node.removeEventListener( 'click', clickHandler, false );
 			}
 		};
 	};
