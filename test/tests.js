@@ -47,7 +47,7 @@
 
 		node.focus();
 		t.equal( document.activeElement, node );
-		simulant.fire( node, 'keydown', { which: 32 });
+		simulant.fire( node, 'click' );
 
 		setTimeout( function () {
 			t.ok( tapped, 'was tapped' );
