@@ -239,7 +239,7 @@
 				var blurHandler, keydownHandler;
 
 				keydownHandler = function ( event ) {
-					if ( event.which === 32 ) { // space key
+					if ( event.which === 32 || event.keyCode === 32 ) { // space key
 						fire({
 							node: node,
 							original: event
