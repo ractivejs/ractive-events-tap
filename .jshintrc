@@ -1,0 +1,19 @@
+{
+	"esnext": true,
+	"undef": true,
+	"unused": true,
+	"globals": {
+		"window": true,
+		"document": true,
+
+		"chai": true,
+		"assert": true,
+		"mocha": true,
+		"describe": true,
+		"beforeEach": true,
+		"it": true,
+		"simulant": true,
+		"Ractive": true,
+		"setTimeout": true
+	}
+}

@@ -3,27 +3,11 @@
 	"version": "0.1.2",
 	"author": "Rich Harris",
 	"main": "ractive-events-tap.js",
-	"dependencies": {
-		"ractive": "^0.5.8"
-	},
-	"devDependencies": {
-		"qunit": "~1.14.0",
-		"simulant": "~0.1.0"
-	},
 	"ignore": [
-		".git/",
+		".*",
+		"*.json",
 		"demo/",
-		"grunt/",
-		"lib/",
-		"src/",
-		"test/",
-		".gitignore",
-		"bower.json",
-		"component.json",
-		"Gruntfile.js",
-		"index.html",
-		"package.json",
-		"ractive-events-tap.min.js",
-		"README.md"
+		"node_modules/",
+		"test/"
 	]
 }
