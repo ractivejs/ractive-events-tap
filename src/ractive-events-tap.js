@@ -1,13 +1,51 @@
-export default function tap ( node, fire ) {
-	var mousedown, touchstart, focusHandler, distanceThreshold, timeThreshold, preventMousedownEvents, preventMousedownTimeout;
+const DISTANCE_THRESHOLD = 5; // maximum pixels pointer can move before cancel
+const TIME_THRESHOLD = 400;   // maximum milliseconds between down and up before cancel
 
-	distanceThreshold = 5; // maximum pixels pointer can move before cancel
-	timeThreshold = 400;   // maximum milliseconds between down and up before cancel
+export default function tap ( node, callback ) {
+	return new TapHandler( node, callback );
+}
 
-	mousedown = function ( event ) {
-		var currentTarget, x, y, pointerId, up, move, cancel;
+var TapHandler = function ( node, callback ) {
+	this.node = node;
+	this.callback = callback;
 
-		if ( preventMousedownEvents ) {
+	this.preventMousedownEvents = false;
+
+	this.bind( node );
+};
+
+TapHandler.prototype = {
+	bind ( node ) {
+		// listen for mouse/pointer events...
+		if ( window.navigator.pointerEnabled ) {
+			node.addEventListener( 'pointerdown', handleMousedown, false );
+		} else if ( window.navigator.msPointerEnabled ) {
+			node.addEventListener( 'MSPointerDown', handleMousedown, false );
+		} else {
+			node.addEventListener( 'mousedown', handleMousedown, false );
+		}
+
+		// ...and touch events
+		node.addEventListener( 'touchstart', handleTouchstart, false );
+
+		// native buttons, and <input type='button'> elements, should fire a tap event
+		// when the space key is pressed
+		if ( node.tagName === 'BUTTON' || node.type === 'button' ) {
+			node.addEventListener( 'focus', handleFocus, false );
+		}
+
+		node.__tap_handler__ = this;
+	},
+
+	fire ( event ) {
+		this.callback({
+			node: this.node,
+			original: event
+		});
+	},
+
+	mousedown ( event ) {
+		if ( this.preventMousedownEvents ) {
 			return;
 		}
 
@@ -15,113 +53,89 @@ export default function tap ( node, fire ) {
 			return;
 		}
 
-		x = event.clientX;
-		y = event.clientY;
-		currentTarget = this;
-		// This will be null for mouse events.
-		pointerId = event.pointerId;
+		this.x = event.clientX;
+		this.y = event.clientY;
 
-		up = function ( event ) {
-			if ( event.pointerId != pointerId ) {
+		// This will be null for mouse events.
+		this.pointerId = event.pointerId;
+
+		var handleMouseup = event => {
+			if ( event.pointerId != this.pointerId ) {
 				return;
 			}
 
-			fire({
-				node: currentTarget,
-				original: event
-			});
-
+			this.fire();
 			cancel();
 		};
 
-		move = function ( event ) {
-			if ( event.pointerId != pointerId ) {
+		var handleMousemove = event => {
+			if ( event.pointerId != this.pointerId ) {
 				return;
 			}
 
-			if ( ( Math.abs( event.clientX - x ) >= distanceThreshold ) || ( Math.abs( event.clientY - y ) >= distanceThreshold ) ) {
+			if ( ( Math.abs( event.clientX - this.x ) >= DISTANCE_THRESHOLD ) || ( Math.abs( event.clientY - this.y ) >= DISTANCE_THRESHOLD ) ) {
 				cancel();
 			}
 		};
 
-		cancel = function () {
-			node.removeEventListener( 'MSPointerUp', up, false );
-			document.removeEventListener( 'MSPointerMove', move, false );
+		var cancel = () => {
+			this.node.removeEventListener( 'MSPointerUp', handleMouseup, false );
+			document.removeEventListener( 'MSPointerMove', handleMousemove, false );
 			document.removeEventListener( 'MSPointerCancel', cancel, false );
-			node.removeEventListener( 'pointerup', up, false );
-			document.removeEventListener( 'pointermove', move, false );
+			this.node.removeEventListener( 'pointerup', handleMouseup, false );
+			document.removeEventListener( 'pointermove', handleMousemove, false );
 			document.removeEventListener( 'pointercancel', cancel, false );
-			node.removeEventListener( 'click', up, false );
-			document.removeEventListener( 'mousemove', move, false );
+			this.node.removeEventListener( 'click', handleMouseup, false );
+			document.removeEventListener( 'mousemove', handleMousemove, false );
 		};
 
 		if ( window.navigator.pointerEnabled ) {
-			node.addEventListener( 'pointerup', up, false );
-			document.addEventListener( 'pointermove', move, false );
+			this.node.addEventListener( 'pointerup', handleMouseup, false );
+			document.addEventListener( 'pointermove', handleMousemove, false );
 			document.addEventListener( 'pointercancel', cancel, false );
 		} else if ( window.navigator.msPointerEnabled ) {
-			node.addEventListener( 'MSPointerUp', up, false );
-			document.addEventListener( 'MSPointerMove', move, false );
+			this.node.addEventListener( 'MSPointerUp', handleMouseup, false );
+			document.addEventListener( 'MSPointerMove', handleMousemove, false );
 			document.addEventListener( 'MSPointerCancel', cancel, false );
 		} else {
-			node.addEventListener( 'click', up, false );
-			document.addEventListener( 'mousemove', move, false );
+			this.node.addEventListener( 'click', handleMouseup, false );
+			document.addEventListener( 'mousemove', handleMousemove, false );
 		}
 
-		setTimeout( cancel, timeThreshold );
-	};
+		setTimeout( cancel, TIME_THRESHOLD );
+	},
 
-	if ( window.navigator.pointerEnabled ) {
-		node.addEventListener( 'pointerdown', mousedown, false );
-	} else if ( window.navigator.msPointerEnabled ) {
-		node.addEventListener( 'MSPointerDown', mousedown, false );
-	} else {
-		node.addEventListener( 'mousedown', mousedown, false );
-	}
+	touchdown () {
+		var touch = event.touches[0];
 
+		var x = touch.clientX;
+		var y = touch.clientY;
 
-	touchstart = function ( event ) {
-		var currentTarget, x, y, touch, finger, move, up, cancel;
+		var finger = touch.identifier;
 
-		if ( event.touches.length !== 1 ) {
-			return;
-		}
+		var handleTouchup = event => {
+			var touch = event.changedTouches[0];
 
-		touch = event.touches[0];
-
-		x = touch.clientX;
-		y = touch.clientY;
-		currentTarget = this;
-
-		finger = touch.identifier;
-
-		up = function ( event ) {
-			var touch;
-
-			touch = event.changedTouches[0];
 			if ( touch.identifier !== finger ) {
 				cancel();
+				return;
 			}
 
-			event.preventDefault();  // prevent compatibility mouse event
+			event.preventDefault(); // prevent compatibility mouse event
 
 			// for the benefit of mobile Firefox and old Android browsers, we need this absurd hack.
-			preventMousedownEvents = true;
-			clearTimeout( preventMousedownTimeout );
+			this.preventMousedownEvents = true;
+			clearTimeout( this.preventMousedownTimeout );
 
-			preventMousedownTimeout = setTimeout( function () {
-				preventMousedownEvents = false;
+			this.preventMousedownTimeout = setTimeout( () => {
+				this.preventMousedownEvents = false;
 			}, 400 );
 
-			fire({
-				node: currentTarget,
-				original: event
-			});
-
+			this.fire();
 			cancel();
 		};
 
-		move = function ( event ) {
+		var handleTouchmove = event => {
 			var touch;
 
 			if ( event.touches.length !== 1 || event.touches[0].identifier !== finger ) {
@@ -129,62 +143,55 @@ export default function tap ( node, fire ) {
 			}
 
 			touch = event.touches[0];
-			if ( ( Math.abs( touch.clientX - x ) >= distanceThreshold ) || ( Math.abs( touch.clientY - y ) >= distanceThreshold ) ) {
+			if ( ( Math.abs( touch.clientX - x ) >= DISTANCE_THRESHOLD ) || ( Math.abs( touch.clientY - y ) >= DISTANCE_THRESHOLD ) ) {
 				cancel();
 			}
 		};
 
-		cancel = function () {
-			node.removeEventListener( 'touchend', up, false );
-			window.removeEventListener( 'touchmove', move, false );
+		var cancel = () => {
+			this.node.removeEventListener( 'touchend', handleTouchup, false );
+			window.removeEventListener( 'touchmove', handleTouchmove, false );
 			window.removeEventListener( 'touchcancel', cancel, false );
 		};
 
-		node.addEventListener( 'touchend', up, false );
-		window.addEventListener( 'touchmove', move, false );
+		this.node.addEventListener( 'touchend', handleTouchup, false );
+		window.addEventListener( 'touchmove', handleTouchmove, false );
 		window.addEventListener( 'touchcancel', cancel, false );
 
-		setTimeout( cancel, timeThreshold );
-	};
+		setTimeout( cancel, TIME_THRESHOLD );
+	},
 
-	node.addEventListener( 'touchstart', touchstart, false );
+	teardown () {
+		var node = this.node;
 
-
-	// native buttons, and <input type='button'> elements, should fire a tap event
-	// when the space key is pressed
-	if ( node.tagName === 'BUTTON' || node.type === 'button' ) {
-		focusHandler = function () {
-			var blurHandler, keydownHandler;
-
-			keydownHandler = function ( event ) {
-				if ( event.which === 32 ) { // space key
-					fire({
-						node: node,
-						original: event
-					});
-				}
-			};
-
-			blurHandler = function () {
-				node.removeEventListener( 'keydown', keydownHandler, false );
-				node.removeEventListener( 'blur', blurHandler, false );
-			};
-
-			node.addEventListener( 'keydown', keydownHandler, false );
-			node.addEventListener( 'blur', blurHandler, false );
-		};
-
-		node.addEventListener( 'focus', focusHandler, false );
+		node.removeEventListener( 'pointerdown',   handleMousedown, false );
+		node.removeEventListener( 'MSPointerDown', handleMousedown, false );
+		node.removeEventListener( 'mousedown',     handleMousedown, false );
+		node.removeEventListener( 'touchstart',    handleTouchstart, false );
+		node.removeEventListener( 'focus',         handleFocus, false );
 	}
+};
 
+function handleMousedown ( event ) {
+	this.__tap_handler__.mousedown( event );
+}
 
-	return {
-		teardown: function () {
-			node.removeEventListener( 'pointerdown', mousedown, false );
-			node.removeEventListener( 'MSPointerDown', mousedown, false );
-			node.removeEventListener( 'mousedown', mousedown, false );
-			node.removeEventListener( 'touchstart', touchstart, false );
-			node.removeEventListener( 'focus', focusHandler, false );
-		}
-	};
+function handleTouchstart ( event ) {
+	this.__tap_handler__.touchdown( event );
+}
+
+function handleFocus () {
+	this.addEventListener( 'keydown', handleKeydown, false );
+	this.addEventListener( 'blur', handleBlur, false );
+}
+
+function handleBlur () {
+	this.removeEventListener( 'keydown', handleKeydown, false );
+	this.removeEventListener( 'blur', handleBlur, false );
+}
+
+function handleKeydown ( event ) {
+	if ( event.which === 32 ) { // space key
+		this.__tap_handler__.fire();
+	}
 }
