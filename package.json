@@ -4,7 +4,8 @@
   "author": "Rich Harris",
   "license": "MIT",
   "repository": "https://github.com/ractivejs/ractive-events-tap",
-  "main": "ractive-events-tap.js",
+  "main": "dist/ractive-events-tap.js",
+  "jsnext:main": "src/ractive-events-tap.js",
   "description": "Tap/fastclick event plugin for Ractive.js",
   "devDependencies": {
     "gobble": "^0.7.2",
@@ -13,6 +14,7 @@
     "gobble-esperanto-bundle": "^0.1.7"
   },
   "scripts": {
-    "build": "rm -f dist; gobble build dist"
+    "build": "rm -rf dist; gobble build dist",
+    "prepublish": "npm run build"
   }
 }
