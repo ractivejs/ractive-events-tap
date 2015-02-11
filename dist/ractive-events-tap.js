@@ -43,10 +43,12 @@
 			node.__tap_handler__ = this;
 		},
 
-		fire: function fire(event) {
+		fire: function fire(event, x, y) {
 			this.callback({
 				node: this.node,
-				original: event
+				original: event,
+				x: x,
+				y: y
 			});
 		},
 
@@ -60,27 +62,27 @@
 				return;
 			}
 
-			this.x = event.clientX;
-			this.y = event.clientY;
+			var x = event.clientX;
+			var y = event.clientY;
 
 			// This will be null for mouse events.
-			this.pointerId = event.pointerId;
+			var pointerId = event.pointerId;
 
 			var handleMouseup = function (event) {
-				if (event.pointerId != _this.pointerId) {
+				if (event.pointerId != pointerId) {
 					return;
 				}
 
-				_this.fire();
+				_this.fire(event, x, y);
 				cancel();
 			};
 
 			var handleMousemove = function (event) {
-				if (event.pointerId != _this.pointerId) {
+				if (event.pointerId != pointerId) {
 					return;
 				}
 
-				if (Math.abs(event.clientX - _this.x) >= DISTANCE_THRESHOLD || Math.abs(event.clientY - _this.y) >= DISTANCE_THRESHOLD) {
+				if (Math.abs(event.clientX - x) >= DISTANCE_THRESHOLD || Math.abs(event.clientY - y) >= DISTANCE_THRESHOLD) {
 					cancel();
 				}
 			};
@@ -139,7 +141,7 @@
 					_this.preventMousedownEvents = false;
 				}, 400);
 
-				_this.fire();
+				_this.fire(event, x, y);
 				cancel();
 			};
 

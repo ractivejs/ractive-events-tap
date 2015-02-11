@@ -37,10 +37,12 @@ TapHandler.prototype = {
 		node.__tap_handler__ = this;
 	},
 
-	fire ( event ) {
+	fire ( event, x, y ) {
 		this.callback({
 			node: this.node,
-			original: event
+			original: event,
+			x,
+			y
 		});
 	},
 
@@ -53,27 +55,27 @@ TapHandler.prototype = {
 			return;
 		}
 
-		this.x = event.clientX;
-		this.y = event.clientY;
+		var x = event.clientX;
+		var y = event.clientY;
 
 		// This will be null for mouse events.
-		this.pointerId = event.pointerId;
+		var pointerId = event.pointerId;
 
 		var handleMouseup = event => {
-			if ( event.pointerId != this.pointerId ) {
+			if ( event.pointerId != pointerId ) {
 				return;
 			}
 
-			this.fire();
+			this.fire( event, x, y );
 			cancel();
 		};
 
 		var handleMousemove = event => {
-			if ( event.pointerId != this.pointerId ) {
+			if ( event.pointerId != pointerId ) {
 				return;
 			}
 
-			if ( ( Math.abs( event.clientX - this.x ) >= DISTANCE_THRESHOLD ) || ( Math.abs( event.clientY - this.y ) >= DISTANCE_THRESHOLD ) ) {
+			if ( ( Math.abs( event.clientX - x ) >= DISTANCE_THRESHOLD ) || ( Math.abs( event.clientY - y ) >= DISTANCE_THRESHOLD ) ) {
 				cancel();
 			}
 		};
@@ -131,7 +133,7 @@ TapHandler.prototype = {
 				this.preventMousedownEvents = false;
 			}, 400 );
 
-			this.fire();
+			this.fire( event, x, y );
 			cancel();
 		};
 
