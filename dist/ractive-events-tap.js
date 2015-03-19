@@ -9,9 +9,12 @@
 	var ractive_events_tap = tap;
 
 	var DISTANCE_THRESHOLD = 5; // maximum pixels pointer can move before cancel
-	var TIME_THRESHOLD = 400;function tap(node, callback) {
-		return new TapHandler(node, callback);
-	}var TapHandler = function (node, callback) {
+	var TIME_THRESHOLD = 400;
+	function tap(node, callback) {
+		return new ractive_events_tap__TapHandler(node, callback);
+	}
+
+	var ractive_events_tap__TapHandler = function ractive_events_tap__TapHandler(node, callback) {
 		this.node = node;
 		this.callback = callback;
 
@@ -20,7 +23,7 @@
 		this.bind(node);
 	};
 
-	TapHandler.prototype = {
+	ractive_events_tap__TapHandler.prototype = {
 		bind: function bind(node) {
 			// listen for mouse/pointer events...
 			if (window.navigator.pointerEnabled) {
@@ -54,6 +57,7 @@
 
 		mousedown: function mousedown(event) {
 			var _this = this;
+
 			if (this.preventMousedownEvents) {
 				return;
 			}
@@ -116,6 +120,7 @@
 
 		touchdown: function touchdown() {
 			var _this = this;
+
 			var touch = event.touches[0];
 
 			var x = touch.clientX;
