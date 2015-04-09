@@ -31,7 +31,7 @@ npm install ractive-events-tap
 
 ## Use as a module...
 
-**Note: previous versions of this plugin would 'self-register'. If you are using a module system such as Browserify, Webpack or RequireJS, that's no longer the case - you must explicitly register the plugin.
+**Note: previous versions of this plugin would 'self-register'. If you are using a module system such as Browserify, Webpack or RequireJS, that's no longer the case - you must explicitly register the plugin.**
 
 
 ### CommonJS
