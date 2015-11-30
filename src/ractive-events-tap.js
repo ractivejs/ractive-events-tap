@@ -5,16 +5,16 @@ export default function tap ( node, callback ) {
 	return new TapHandler( node, callback );
 }
 
-var TapHandler = function ( node, callback ) {
-	this.node = node;
-	this.callback = callback;
+class TapHandler {
+	constructor ( node, callback ) {
+		this.node = node;
+		this.callback = callback;
 
-	this.preventMousedownEvents = false;
+		this.preventMousedownEvents = false;
 
-	this.bind( node );
-};
+		this.bind( node );
+	}
 
-TapHandler.prototype = {
 	bind ( node ) {
 		// listen for mouse/pointer events...
 		if ( window.navigator.pointerEnabled ) {
@@ -35,7 +35,7 @@ TapHandler.prototype = {
 		}
 
 		node.__tap_handler__ = this;
-	},
+	}
 
 	fire ( event, x, y ) {
 		this.callback({
@@ -44,7 +44,7 @@ TapHandler.prototype = {
 			x,
 			y
 		});
-	},
+	}
 
 	mousedown ( event ) {
 		if ( this.preventMousedownEvents ) {
@@ -55,13 +55,13 @@ TapHandler.prototype = {
 			return;
 		}
 
-		var x = event.clientX;
-		var y = event.clientY;
+		const x = event.clientX;
+		const y = event.clientY;
 
 		// This will be null for mouse events.
-		var pointerId = event.pointerId;
+		const pointerId = event.pointerId;
 
-		var handleMouseup = event => {
+		const handleMouseup = event => {
 			if ( event.pointerId != pointerId ) {
 				return;
 			}
@@ -70,7 +70,7 @@ TapHandler.prototype = {
 			cancel();
 		};
 
-		var handleMousemove = event => {
+		const handleMousemove = event => {
 			if ( event.pointerId != pointerId ) {
 				return;
 			}
@@ -80,7 +80,7 @@ TapHandler.prototype = {
 			}
 		};
 
-		var cancel = () => {
+		const cancel = () => {
 			this.node.removeEventListener( 'MSPointerUp', handleMouseup, false );
 			document.removeEventListener( 'MSPointerMove', handleMousemove, false );
 			document.removeEventListener( 'MSPointerCancel', cancel, false );
@@ -105,18 +105,18 @@ TapHandler.prototype = {
 		}
 
 		setTimeout( cancel, TIME_THRESHOLD );
-	},
+	}
 
 	touchdown () {
-		var touch = event.touches[0];
+		const touch = event.touches[0];
 
-		var x = touch.clientX;
-		var y = touch.clientY;
+		const x = touch.clientX;
+		const y = touch.clientY;
 
-		var finger = touch.identifier;
+		const finger = touch.identifier;
 
-		var handleTouchup = event => {
-			var touch = event.changedTouches[0];
+		const handleTouchup = event => {
+			const touch = event.changedTouches[0];
 
 			if ( touch.identifier !== finger ) {
 				cancel();
@@ -137,20 +137,18 @@ TapHandler.prototype = {
 			cancel();
 		};
 
-		var handleTouchmove = event => {
-			var touch;
-
+		const handleTouchmove = event => {
 			if ( event.touches.length !== 1 || event.touches[0].identifier !== finger ) {
 				cancel();
 			}
 
-			touch = event.touches[0];
+			const touch = event.touches[0];
 			if ( ( Math.abs( touch.clientX - x ) >= DISTANCE_THRESHOLD ) || ( Math.abs( touch.clientY - y ) >= DISTANCE_THRESHOLD ) ) {
 				cancel();
 			}
 		};
 
-		var cancel = () => {
+		const cancel = () => {
 			this.node.removeEventListener( 'touchend', handleTouchup, false );
 			window.removeEventListener( 'touchmove', handleTouchmove, false );
 			window.removeEventListener( 'touchcancel', cancel, false );
@@ -161,10 +159,10 @@ TapHandler.prototype = {
 		window.addEventListener( 'touchcancel', cancel, false );
 
 		setTimeout( cancel, TIME_THRESHOLD );
-	},
+	}
 
 	teardown () {
-		var node = this.node;
+		const node = this.node;
 
 		node.removeEventListener( 'pointerdown',   handleMousedown, false );
 		node.removeEventListener( 'MSPointerDown', handleMousedown, false );
@@ -172,7 +170,7 @@ TapHandler.prototype = {
 		node.removeEventListener( 'touchstart',    handleTouchstart, false );
 		node.removeEventListener( 'focus',         handleFocus, false );
 	}
-};
+}
 
 function handleMousedown ( event ) {
 	this.__tap_handler__.mousedown( event );
