@@ -5,14 +5,14 @@ function tap(node, callback) {
 	return new TapHandler(node, callback);
 }
 
-var TapHandler = function TapHandler(node, callback) {
+function TapHandler(node, callback) {
 	this.node = node;
 	this.callback = callback;
 
 	this.preventMousedownEvents = false;
 
 	this.bind(node);
-};
+}
 
 TapHandler.prototype = {
 	bind: function bind(node) {
@@ -139,13 +139,11 @@ TapHandler.prototype = {
 		};
 
 		var handleTouchmove = function handleTouchmove(event) {
-			var touch;
-
 			if (event.touches.length !== 1 || event.touches[0].identifier !== finger) {
 				cancel();
 			}
 
-			touch = event.touches[0];
+			var touch = event.touches[0];
 			if (Math.abs(touch.clientX - x) >= DISTANCE_THRESHOLD || Math.abs(touch.clientY - y) >= DISTANCE_THRESHOLD) {
 				cancel();
 			}
