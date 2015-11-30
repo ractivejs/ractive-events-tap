@@ -5,16 +5,16 @@ export default function tap ( node, callback ) {
 	return new TapHandler( node, callback );
 }
 
-class TapHandler {
-	constructor ( node, callback ) {
-		this.node = node;
-		this.callback = callback;
+function TapHandler ( node, callback ) {
+	this.node = node;
+	this.callback = callback;
 
-		this.preventMousedownEvents = false;
+	this.preventMousedownEvents = false;
 
-		this.bind( node );
-	}
+	this.bind( node );
+}
 
+TapHandler.prototype = {
 	bind ( node ) {
 		// listen for mouse/pointer events...
 		if ( window.navigator.pointerEnabled ) {
@@ -35,7 +35,7 @@ class TapHandler {
 		}
 
 		node.__tap_handler__ = this;
-	}
+	},
 
 	fire ( event, x, y ) {
 		this.callback({
@@ -44,7 +44,7 @@ class TapHandler {
 			x,
 			y
 		});
-	}
+	},
 
 	mousedown ( event ) {
 		if ( this.preventMousedownEvents ) {
@@ -105,7 +105,7 @@ class TapHandler {
 		}
 
 		setTimeout( cancel, TIME_THRESHOLD );
-	}
+	},
 
 	touchdown () {
 		const touch = event.touches[0];
@@ -159,7 +159,7 @@ class TapHandler {
 		window.addEventListener( 'touchcancel', cancel, false );
 
 		setTimeout( cancel, TIME_THRESHOLD );
-	}
+	},
 
 	teardown () {
 		const node = this.node;
@@ -170,7 +170,7 @@ class TapHandler {
 		node.removeEventListener( 'touchstart',    handleTouchstart, false );
 		node.removeEventListener( 'focus',         handleFocus, false );
 	}
-}
+};
 
 function handleMousedown ( event ) {
 	this.__tap_handler__.mousedown( event );
