@@ -26,7 +26,10 @@ TapHandler.prototype = {
 		}
 
 		// ...and touch events
-		node.addEventListener( 'touchstart', handleTouchstart, false );
+		if (!window.navigator.pointerEnabled && !window.navigator.msPointerEnabled) {
+			node.addEventListener('touchstart', handleTouchstart, false);
+		}
+
 
 		// native buttons, and <input type='button'> elements, should fire a tap event
 		// when the space key is pressed
