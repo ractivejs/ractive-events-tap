@@ -1,5 +1,9 @@
 # changelog
 
+## 0.3.1
+
+* Fix `touchdown` handler error
+
 ## 0.3.0
 
 * Create separate ES6/UMD builds

@@ -1,7 +1,7 @@
-const DISTANCE_THRESHOLD = 5; // maximum pixels pointer can move before cancel
-const TIME_THRESHOLD = 400;   // maximum milliseconds between down and up before cancel
+var DISTANCE_THRESHOLD = 5; // maximum pixels pointer can move before cancel
+var TIME_THRESHOLD = 400;   // maximum milliseconds between down and up before cancel
 
-export default function tap ( node, callback ) {
+function tap ( node, callback ) {
 	return new TapHandler( node, callback );
 }
 
@@ -15,7 +15,7 @@ function TapHandler ( node, callback ) {
 }
 
 TapHandler.prototype = {
-	bind ( node ) {
+	bind: function bind ( node ) {
 		// listen for mouse/pointer events...
 		if (window.navigator.pointerEnabled) {
 			node.addEventListener( 'pointerdown', handleMousedown, false );
@@ -37,16 +37,18 @@ TapHandler.prototype = {
 		node.__tap_handler__ = this;
 	},
 
-	fire ( event, x, y ) {
+	fire: function fire ( event, x, y ) {
 		this.callback({
 			node: this.node,
 			original: event,
-			x,
-			y
+			x: x,
+			y: y
 		});
 	},
 
-	mousedown ( event ) {
+	mousedown: function mousedown ( event ) {
+		var this$1 = this;
+
 		if ( this.preventMousedownEvents ) {
 			return;
 		}
@@ -55,22 +57,22 @@ TapHandler.prototype = {
 			return;
 		}
 
-		const x = event.clientX;
-		const y = event.clientY;
+		var x = event.clientX;
+		var y = event.clientY;
 
 		// This will be null for mouse events.
-		const pointerId = event.pointerId;
+		var pointerId = event.pointerId;
 
-		const handleMouseup = event => {
+		var handleMouseup = function (event) {
 			if ( event.pointerId != pointerId ) {
 				return;
 			}
 
-			this.fire( event, x, y );
+			this$1.fire( event, x, y );
 			cancel();
 		};
 
-		const handleMousemove = event => {
+		var handleMousemove = function (event) {
 			if ( event.pointerId != pointerId ) {
 				return;
 			}
@@ -80,14 +82,14 @@ TapHandler.prototype = {
 			}
 		};
 
-		const cancel = () => {
-			this.node.removeEventListener( 'MSPointerUp', handleMouseup, false );
+		var cancel = function () {
+			this$1.node.removeEventListener( 'MSPointerUp', handleMouseup, false );
 			document.removeEventListener( 'MSPointerMove', handleMousemove, false );
 			document.removeEventListener( 'MSPointerCancel', cancel, false );
-			this.node.removeEventListener( 'pointerup', handleMouseup, false );
+			this$1.node.removeEventListener( 'pointerup', handleMouseup, false );
 			document.removeEventListener( 'pointermove', handleMousemove, false );
 			document.removeEventListener( 'pointercancel', cancel, false );
-			this.node.removeEventListener( 'click', handleMouseup, false );
+			this$1.node.removeEventListener( 'click', handleMouseup, false );
 			document.removeEventListener( 'mousemove', handleMousemove, false );
 		};
 
@@ -107,16 +109,18 @@ TapHandler.prototype = {
 		setTimeout( cancel, TIME_THRESHOLD );
 	},
 
-	touchdown ( event ) {
-		const touch = event.touches[0];
+	touchdown: function touchdown ( event ) {
+		var this$1 = this;
 
-		const x = touch.clientX;
-		const y = touch.clientY;
+		var touch = event.touches[0];
 
-		const finger = touch.identifier;
+		var x = touch.clientX;
+		var y = touch.clientY;
 
-		const handleTouchup = event => {
-			const touch = event.changedTouches[0];
+		var finger = touch.identifier;
+
+		var handleTouchup = function (event) {
+			var touch = event.changedTouches[0];
 
 			if ( touch.identifier !== finger ) {
 				cancel();
@@ -126,30 +130,30 @@ TapHandler.prototype = {
 			event.preventDefault(); // prevent compatibility mouse event
 
 			// for the benefit of mobile Firefox and old Android browsers, we need this absurd hack.
-			this.preventMousedownEvents = true;
-			clearTimeout( this.preventMousedownTimeout );
+			this$1.preventMousedownEvents = true;
+			clearTimeout( this$1.preventMousedownTimeout );
 
-			this.preventMousedownTimeout = setTimeout( () => {
-				this.preventMousedownEvents = false;
+			this$1.preventMousedownTimeout = setTimeout( function () {
+				this$1.preventMousedownEvents = false;
 			}, 400 );
 
-			this.fire( event, x, y );
+			this$1.fire( event, x, y );
 			cancel();
 		};
 
-		const handleTouchmove = event => {
+		var handleTouchmove = function (event) {
 			if ( event.touches.length !== 1 || event.touches[0].identifier !== finger ) {
 				cancel();
 			}
 
-			const touch = event.touches[0];
+			var touch = event.touches[0];
 			if ( ( Math.abs( touch.clientX - x ) >= DISTANCE_THRESHOLD ) || ( Math.abs( touch.clientY - y ) >= DISTANCE_THRESHOLD ) ) {
 				cancel();
 			}
 		};
 
-		const cancel = () => {
-			this.node.removeEventListener( 'touchend', handleTouchup, false );
+		var cancel = function () {
+			this$1.node.removeEventListener( 'touchend', handleTouchup, false );
 			window.removeEventListener( 'touchmove', handleTouchmove, false );
 			window.removeEventListener( 'touchcancel', cancel, false );
 		};
@@ -161,8 +165,8 @@ TapHandler.prototype = {
 		setTimeout( cancel, TIME_THRESHOLD );
 	},
 
-	teardown () {
-		const node = this.node;
+	teardown: function teardown () {
+		var node = this.node;
 
 		node.removeEventListener( 'pointerdown',   handleMousedown, false );
 		node.removeEventListener( 'MSPointerDown', handleMousedown, false );
@@ -195,3 +199,5 @@ function handleKeydown ( event ) {
 		this.__tap_handler__.fire();
 	}
 }
+
+export default tap;
