@@ -93,7 +93,12 @@ var ractive = new Ractive({
 
 If you include ractive-events-tap as a script tag, it will 'self-register' with the global `Ractive` object, and all Ractive instances will be able to use it.
 
+## Commands when Contributing
 
+```bash
+npm run build #compile
+npm run test # run chrome 55+
+```
 
 ## License
 
