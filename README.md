@@ -15,7 +15,13 @@ Pressing the spacebar while an element is focused, which would normally dispatch
 
 ## Installation
 
-Install from npm...
+Include it from CDN...
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/ractive@0.9.3/ractive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ractive-events-tap@0.3.1/dist/ractive-events-tap.umd.min.js"></script>
+```
+...or install from npm...
 
 ```bash
 npm install ractive-events-tap
