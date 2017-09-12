@@ -60,13 +60,13 @@ describe( 'ractive-events-tap', function () {
 
 	it( 'IE Edge window.pointerEnabled == undefined should still result in a tap event', function ( done ) {
 		var ractive, node, tapped;
-		
+
 		window.navigator.pointerEnabled = undefined;
-		window.pointerEvent = new PointerEvent("pointerdown", 
+		window.PointerEvent = new PointerEvent("pointerdown", 
 			{
 				pointerId: 1,
-				bubbles: true, 
-				cancelable: true, 
+				bubbles: true,
+				cancelable: true,
 				pointerType: "touch",
 				width: 100,
 				height: 100,
