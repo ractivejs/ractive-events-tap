@@ -62,16 +62,9 @@ describe( 'ractive-events-tap', function () {
 		var ractive, node, tapped;
 
 		window.navigator.pointerEnabled = undefined;
-		window.PointerEvent = new PointerEvent("pointerdown", 
-			{
-				pointerId: 1,
-				bubbles: true,
-				cancelable: true,
-				pointerType: "touch",
-				width: 100,
-				height: 100,
-				isPrimary: true
-			});
+		/** NOTE removed mocking PointerEvent, it should be handled in the Browser itself. Ex. Chrome 56+
+		 * Because window.PointerEvent = new PointerEvent() is just very incorrect.
+		 * window.PointerEvent = new PointerEvent("pointerdown", {}); */
 
 		ractive = new Ractive({
 			el: fixture,
