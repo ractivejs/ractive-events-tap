@@ -95,10 +95,12 @@ TapHandler.prototype = {
 			this.node.addEventListener( 'pointerup', handleMouseup, false );
 			document.addEventListener( 'pointermove', handleMousemove, false );
 			document.addEventListener( 'pointercancel', cancel, false );
+			this.node.addEventListener( 'click', handleMouseup, false );
 		} else if ( window.navigator.msPointerEnabled ) {
 			this.node.addEventListener( 'MSPointerUp', handleMouseup, false );
 			document.addEventListener( 'MSPointerMove', handleMousemove, false );
 			document.addEventListener( 'MSPointerCancel', cancel, false );
+			this.node.addEventListener( 'click', handleMouseup, false );
 		} else {
 			this.node.addEventListener( 'click', handleMouseup, false );
 			document.addEventListener( 'mousemove', handleMousemove, false );
