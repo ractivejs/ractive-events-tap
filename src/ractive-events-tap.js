@@ -96,18 +96,15 @@ TapHandler.prototype = {
 			this.node.addEventListener( 'pointerup', handleMouseup, false );
 			document.addEventListener( 'pointermove', handleMousemove, false );
 			document.addEventListener( 'pointercancel', cancel, false );
-			this.node.addEventListener( 'click', handleMouseup, false );
 		} else if ( window.navigator.msPointerEnabled ) {
             console.log('ractive-events-tap msPointerEnabled');
 			this.node.addEventListener( 'MSPointerUp', handleMouseup, false );
 			document.addEventListener( 'MSPointerMove', handleMousemove, false );
 			document.addEventListener( 'MSPointerCancel', cancel, false );
-			this.node.addEventListener( 'click', handleMouseup, false );
-		} else {
-            console.log('ractive-events-tap pointerless');
-			this.node.addEventListener( 'click', handleMouseup, false );
-			document.addEventListener( 'mousemove', handleMousemove, false );
 		}
+        console.log('ractive-events-tap pointerless');
+		this.node.addEventListener( 'click', handleMouseup, false );
+		document.addEventListener( 'mousemove', handleMousemove, false );
 
 		setTimeout( cancel, TIME_THRESHOLD );
 	},
@@ -196,7 +193,7 @@ function handleBlur () {
 }
 
 function handleKeydown ( event ) {
-	if ( event.which === 32 ) { // space key
+	if ( event.which === 32 || event.which === 13 ) { // space key
 		this.__tap_handler__.fire();
 	}
 }
