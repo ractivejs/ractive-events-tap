@@ -99,9 +99,10 @@ TapHandler.prototype = {
 			this.node.addEventListener( 'MSPointerUp', handleMouseup, false );
 			document.addEventListener( 'MSPointerMove', handleMousemove, false );
 			document.addEventListener( 'MSPointerCancel', cancel, false );
+		} else {
+			this.node.addEventListener( 'click', handleMouseup, false );
+			document.addEventListener( 'mousemove', handleMousemove, false );
 		}
-		this.node.addEventListener( 'click', handleMouseup, false );
-		document.addEventListener( 'mousemove', handleMousemove, false );
 
 		setTimeout( cancel, TIME_THRESHOLD );
 	},
