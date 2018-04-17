@@ -36,7 +36,7 @@ TapHandler.prototype = {
 
 		// native buttons, and <input type='button'> elements, should fire a tap event
 		// when the space key is pressed
-		if ( node.tagName === 'BUTTON' || node.type === 'button' ) {
+		if ( node.tagName === 'A' || node.tagName === 'BUTTON' || node.type === 'button' ) {
 			node.addEventListener( 'focus', handleFocus, false );
 		}
 
@@ -100,22 +100,16 @@ TapHandler.prototype = {
 		};
 
 		if ( window.navigator.pointerEnabled ) {
-            console.log('ractive-events-tap pointerEnabled');
 			this.node.addEventListener( 'pointerup', handleMouseup, false );
 			document.addEventListener( 'pointermove', handleMousemove, false );
 			document.addEventListener( 'pointercancel', cancel, false );
-			this.node.addEventListener( 'click', handleMouseup, false );
 		} else if ( window.navigator.msPointerEnabled ) {
-            console.log('ractive-events-tap msPointerEnabled');
 			this.node.addEventListener( 'MSPointerUp', handleMouseup, false );
 			document.addEventListener( 'MSPointerMove', handleMousemove, false );
 			document.addEventListener( 'MSPointerCancel', cancel, false );
-			this.node.addEventListener( 'click', handleMouseup, false );
-		} else {
-            console.log('ractive-events-tap pointerless');
-			this.node.addEventListener( 'click', handleMouseup, false );
-			document.addEventListener( 'mousemove', handleMousemove, false );
 		}
+		this.node.addEventListener( 'click', handleMouseup, false );
+		document.addEventListener( 'mousemove', handleMousemove, false );
 
 		setTimeout( cancel, TIME_THRESHOLD );
 	},
@@ -206,7 +200,7 @@ function handleBlur () {
 }
 
 function handleKeydown ( event ) {
-	if ( event.which === 32 ) { // space key
+	if ( event.which === 32 || event.which === 13 ) { // space key
 		this.__tap_handler__.fire();
 	}
 }
