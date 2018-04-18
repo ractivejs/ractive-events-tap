@@ -180,18 +180,25 @@ function handleTouchstart ( event ) {
 	this.__tap_handler__.touchdown( event );
 }
 
+function handleFocusClick ( event ) {
+	this.__tap_handler__.fire( event );
+}
+
 function handleFocus () {
 	this.addEventListener( 'keydown', handleKeydown, false );
 	this.addEventListener( 'blur', handleBlur, false );
+	this.addEventListener( 'click', handleFocusClick, false );
 }
 
 function handleBlur () {
 	this.removeEventListener( 'keydown', handleKeydown, false );
 	this.removeEventListener( 'blur', handleBlur, false );
+	this.removeEventListener( 'click', handleFocusClick, false );
 }
 
 function handleKeydown ( event ) {
 	if ( event.which === 32 || event.which === 13 ) { // space key
+		this.removeEventListener( 'click', handleFocusClick, false );
 		this.__tap_handler__.fire();
 	}
 }
