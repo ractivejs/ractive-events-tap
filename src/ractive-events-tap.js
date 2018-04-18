@@ -10,6 +10,7 @@ function TapHandler ( node, callback ) {
 	this.callback = callback;
 
 	this.preventMousedownEvents = false;
+	this.preventClickEvents = false;
 
 	this.bind( node );
 }
@@ -55,6 +56,7 @@ TapHandler.prototype = {
 			return;
 		}
 
+		this.preventClickEvents = true;
 		const x = event.clientX;
 		const y = event.clientY;
 
@@ -104,6 +106,7 @@ TapHandler.prototype = {
 			document.addEventListener( 'mousemove', handleMousemove, false );
 		}
 
+		this.node.removeEventListener( 'click', handleFocusClick, false );
 		setTimeout( cancel, TIME_THRESHOLD );
 	},
 
@@ -181,7 +184,9 @@ function handleTouchstart ( event ) {
 }
 
 function handleFocusClick ( event ) {
-	this.__tap_handler__.fire( event );
+	if (! this.__tap_handler__.preventClickEvents) {
+		this.__tap_handler__.fire( event );
+	}
 }
 
 function handleFocus () {
@@ -194,6 +199,7 @@ function handleBlur () {
 	this.removeEventListener( 'keydown', handleKeydown, false );
 	this.removeEventListener( 'blur', handleBlur, false );
 	this.removeEventListener( 'click', handleFocusClick, false );
+	this.__tap_handler__.preventClickEvents = false;
 }
 
 function handleKeydown ( event ) {
