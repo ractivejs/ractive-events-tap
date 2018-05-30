@@ -124,7 +124,7 @@ TapHandler.prototype = {
 		setTimeout( cancel, TIME_THRESHOLD );
 	},
 
-	touchdown () {
+	touchdown ( event ) {
 		const touch = event.touches[0];
 
 		const x = touch.clientX;
