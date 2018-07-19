@@ -57,4 +57,36 @@ describe( 'ractive-events-tap', function () {
 			done();
 		}, 100 );
 	});
+
+	it( 'IE Edge window.pointerEnabled == undefined should still result in a tap event', function ( done ) {
+		var ractive, node, tapped;
+
+		window.navigator.pointerEnabled = undefined;
+		/** NOTE removed mocking PointerEvent, it should be handled in the Browser itself. Ex. Chrome 56+
+		 * Because window.PointerEvent = new PointerEvent() is just very incorrect.
+		 * window.PointerEvent = new PointerEvent("pointerdown", {}); */
+
+		ractive = new Ractive({
+			el: fixture,
+			template: '<button id="test" on-tap="tap">tap me</button>',
+			debug: true
+		});
+
+		node = ractive.nodes.test;
+
+		ractive.on( 'tap', function () {
+			tapped = true;
+		});
+
+		assert.equal( tapped, undefined );
+		simulant.fire( node, 'mousedown' );
+		simulant.fire( node, 'pointerdown' );
+		simulant.fire( node, 'pointerup' );
+		assert.equal( tapped, true );
+
+		setTimeout( function () {
+			assert.equal( tapped, true );
+			done();
+		}, 100 );
+	});
 });

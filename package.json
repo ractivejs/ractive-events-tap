@@ -21,6 +21,6 @@
     "build": "rm -rf dist && rollup -c",
     "prepublish": "npm run build",
     "lint": "eslint src",
-    "test": "open test/index.html"
+    "test": "chrome ./test/index.html"
   }
 }
