@@ -10,7 +10,7 @@
   "description": "Tap/fastclick event plugin for Ractive.js",
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^3.2.2",
+    "eslint": "^6.6.0",
     "mocha": "^3.0.1",
     "ractive": "^0.7.3",
     "rollup": "^0.34.5",
